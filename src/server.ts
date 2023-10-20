@@ -11,6 +11,7 @@ dotenv.config();
  
 const { ATLAS_URI } = process.env;
 console.log(ATLAS_URI);
+const PORT = process.env.PORT || 5200;
  
 if (!ATLAS_URI) {
    console.error("No ATLAS_URI environment variable has been defined in config.env");
@@ -26,8 +27,8 @@ connectToDatabase(ATLAS_URI)
        app.use("/users", userRouter);
        app.use("/meals", mealRouter);
        app.use("/rooms", roomRouter);
-       app.listen(5200, () => {
-           console.log(`Server running at http://localhost:5200...`);
+       app.listen(PORT, () => {
+           console.log(`Server running at http://localhost:${PORT}`);
        });
  
    })
