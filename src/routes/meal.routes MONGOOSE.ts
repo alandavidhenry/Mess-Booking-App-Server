@@ -15,5 +15,5 @@ mealRouter.use(express.json());
 //  });
 
 mealRouter.get("/", async (_req, res) => {
-    await Meal.insertOne
+    console.log('GET');
  });
