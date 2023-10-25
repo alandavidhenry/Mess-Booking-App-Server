@@ -1,6 +1,6 @@
 import * as express from "express";
 import * as mongodb from "mongodb";
-import { collections } from "./database";
+import { collections } from "../database";
  
 export const roomRouter = express.Router();
 roomRouter.use(express.json());

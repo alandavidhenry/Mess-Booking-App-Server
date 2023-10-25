@@ -1,34 +1,38 @@
-import * as dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 import { connectToDatabase } from "./database";
-import { userRouter } from "./user.routes";
-import { mealRouter } from "./meal.routes";
-import { roomRouter } from "./room.routes";
+import { userRouter } from "./routes/user.routes";
+import { mealRouter } from "./routes/meal.routes";
+import { roomRouter } from "./routes/room.routes";
+import 'dotenv/config';
 
-// Load environment variables from the .env file, where the ATLAS_URI is configured
-dotenv.config();
- 
-const { ATLAS_URI } = process.env;
-console.log(ATLAS_URI);
-const PORT = process.env.PORT || 5200;
- 
-if (!ATLAS_URI) {
-   console.error("No ATLAS_URI environment variable has been defined in config.env");
-   process.exit(1);
-}
- 
-connectToDatabase(ATLAS_URI)
+// Load environment variables from the .env file if not set to 'production'
+if (process.env.NODE_ENV !== 'production') {
+    const ATLAS_URI = process.env.ATLAS_URI;
+    if (!ATLAS_URI) {
+    console.error("No ATLAS_URI environment variable has been defined in .env");
+    process.exit(1);
+    };
+
+    const PORT = process.env.PORT || 5200;
+    if (!PORT) {
+        console.error("No PORT environment variable has been defined in .env");
+        process.exit(1);
+    };
+};
+
+// Connect to MongoDB
+connectToDatabase(process.env.ATLAS_URI)
    .then(() => {
        const app = express();
        app.use(cors());
  
-       // start the Express server
+       // Start the Express server
        app.use("/users", userRouter);
        app.use("/meals", mealRouter);
        app.use("/rooms", roomRouter);
-       app.listen(PORT, () => {
-           console.log(`Server running at http://localhost:${PORT}`);
+       app.listen(process.env.PORT, () => {
+           console.log(`Server running at http://localhost:${process.env.PORT}`);
        });
  
    })

@@ -1,7 +1,7 @@
 import * as mongodb from "mongodb";
-import { User } from "./user";
-import { Meal } from "./meal";
-import { Room } from "./room";
+import { User } from "./models/user";
+import { Meal } from "./models/meal";
+import { Room } from "./models/room";
 
 export const collections: {
     users?: mongodb.Collection<User>;
@@ -11,8 +11,14 @@ export const collections: {
 
  export async function connectToDatabase(uri: string) {
     const client = new mongodb.MongoClient(uri);
-    await client.connect();
-  
+    try {
+        await client.connect();
+        console.log('Connected to MongoDB');
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    };
+
     const db = client.db("mean-stack-example");
     await applySchemaValidation(db);
   
